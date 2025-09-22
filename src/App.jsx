@@ -523,7 +523,7 @@ function DealCard({ item, watch, storeName }) {
     return (
         <div className={`border rounded-lg p-3 flex gap-3 ${isWatched ? 'border-yellow-400 dark:border-yellow-600' : 'dark:border-zinc-700'}`}>
             <img src={item.thumb} alt={item.title} className="w-16 h-24 object-cover rounded" onError={(e) => e.target.src='https://placehold.co/120x180/1a1a1a/ffffff?text=N/A'}/>
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col min-w-0">
                 <h3 className="text-sm font-semibold truncate" title={item.title}>{item.title}</h3>
                 <div className="text-xs text-zinc-500">{storeName}</div>
                 {isWatched && <Badge variant="highlight" className="w-fit mt-1"><Star className="w-3 h-3 mr-1"/>Watched</Badge>}
@@ -616,3 +616,4 @@ function ResultsSection({ title, items, CardComponent, ...props }) {
 }
 
 export default App;
+
