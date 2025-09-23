@@ -145,7 +145,7 @@ const Card = ({ children, className = "", ...props }) => <div className={`border
 const CardHeader = ({ children, className = "" }) => <div className={`p-4 border-b border-zinc-200 dark:border-zinc-700 ${className}`}>{children}</div>;
 const CardTitle = ({ children, className = "" }) => <h2 className={`text-lg font-semibold tracking-tight ${className}`}>{children}</h2>;
 const CardContent = ({ children, className = "" }) => <div className={`p-4 ${className}`}>{children}</div>;
-const Button = forwardRef(({ children, asChild = false, variant = 'default', size = 'default', className = '', ...props }, ref) => {
+const Button = forwardRef(({ children, asChild = false, variant = 'default', size = 'default', className = '', onClick, href, ...props }, ref) => {
     const baseClasses = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none";
     const variantClasses = {
         default: "bg-blue-600 text-white hover:bg-blue-600/90",
@@ -153,8 +153,10 @@ const Button = forwardRef(({ children, asChild = false, variant = 'default', siz
         secondary: "bg-zinc-200 text-zinc-800 hover:bg-zinc-200/80 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-700/80",
     }[variant];
     const sizeClasses = { default: "h-10 py-2 px-4", sm: "h-9 px-3" }[size];
-    const Comp = asChild && props.href ? 'a' : 'button';
-    return <Comp ref={ref} className={`${baseClasses} ${variantClasses} ${sizeClasses} ${className}`} {...props}>{children}</Comp>;
+    
+    const finalOnClick = href ? () => window.open(href, '_blank', 'noopener,noreferrer') : onClick;
+
+    return <button ref={ref} className={`${baseClasses} ${variantClasses} ${sizeClasses} ${className}`} onClick={finalOnClick} {...props}>{children}</button>;
 });
 const Input = forwardRef((props, ref) => <input ref={ref} className={`flex h-10 w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${props.className || ''}`} {...props} />);
 const Badge = ({ children, variant = 'default', className = '', ...props }) => {
@@ -346,7 +348,7 @@ function ItemCard({ item, watch }) {
                 <h3 className="font-semibold truncate text-sm" title={item.title}>{item.title}</h3>
                 {item.end && <div className="text-xs text-zinc-500 mt-0.5">{item.activeNow ? 'Ends' : 'Starts'} {new Date(item.end).toLocaleDateString()}</div>}
                 <div className="mt-auto pt-2">
-                    <Button size="sm" asChild href={item.url} target="_blank" rel="noopener noreferrer" className="w-full">{item.activeNow ? "Claim Now" : "Preview"}</Button>
+                    <Button size="sm" href={item.url} className="w-full">{item.activeNow ? "Claim Now" : "Preview"}</Button>
                 </div>
             </div>
         </div>
@@ -460,7 +462,7 @@ function GiveawayCard({ item, watch }) {
                 {isWatched && <Badge variant="highlight"><Star className="w-3 h-3 mr-1"/>Watched</Badge>}
             </div>
             <div className="mt-auto pt-2">
-                <Button size="sm" asChild href={monetizeUrl(item.open_giveaway_url)} target="_blank" rel="noopener noreferrer" className="w-full">Go to Giveaway</Button>
+                <Button size="sm" href={monetizeUrl(item.open_giveaway_url)} className="w-full">Go to Giveaway</Button>
             </div>
         </div>
     );
@@ -533,7 +535,7 @@ function DealCard({ item, watch, storeName }) {
                         <span className="font-bold text-lg text-green-600 dark:text-green-400">${item.salePrice}</span>
                         <span className="line-through text-xs text-zinc-400">${item.normalPrice}</span>
                     </div>
-                    <Button size="sm" asChild href={dealLink} target="_blank" rel="noopener noreferrer">Get Deal</Button>
+                    <Button size="sm" href={dealLink}>Get Deal</Button>
                 </div>
             </div>
         </div>
@@ -616,4 +618,5 @@ function ResultsSection({ title, items, CardComponent, ...props }) {
 }
 
 export default App;
+
 
