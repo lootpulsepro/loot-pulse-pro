@@ -158,7 +158,7 @@ const Button = forwardRef(({ children, asChild = false, variant = 'default', siz
 
     return <button ref={ref} className={`${baseClasses} ${variantClasses} ${sizeClasses} ${className}`} onClick={finalOnClick} {...props}>{children}</button>;
 });
-const Input = forwardRef((props, ref) => <input ref={ref} className={`flex h-10 w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${props.className || ''}`} {...props} />);
+const Input = forwardRef((props, ref) => <input ref={ref} className={`flex h-10 w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-50 placeholder:text-zinc-500 dark:placeholder:text-zinc-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${props.className || ''}`} {...props} />);
 const Badge = ({ children, variant = 'default', className = '', ...props }) => {
     const variantClasses = {
         default: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
@@ -622,6 +622,7 @@ function ResultsSection({ title, items, CardComponent, ...props }) {
 }
 
 export default App;
+
 
 
 
