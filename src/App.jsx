@@ -214,7 +214,6 @@ function App() {
 
     return (
         <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100 font-sans">
-            <div style={{ display: 'none' }}>Impact-Site-Verification: 41d5c441-360c-4471-9ad2-93a13453fe08</div>
             <header className="sticky top-0 z-30 border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur">
                 <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
                     <Gift className="w-6 h-6 text-blue-600" />
@@ -623,6 +622,7 @@ function ResultsSection({ title, items, CardComponent, ...props }) {
 }
 
 export default App;
+
 
 
 
