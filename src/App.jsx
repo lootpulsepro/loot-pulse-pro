@@ -158,7 +158,7 @@ const Button = forwardRef(({ children, asChild = false, variant = 'default', siz
 
     return <button ref={ref} className={`${baseClasses} ${variantClasses} ${sizeClasses} ${className}`} onClick={finalOnClick} {...props}>{children}</button>;
 });
-const Input = forwardRef((props, ref) => <input ref={ref} className={`flex h-10 w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${props.className || ''}`} {...props} />);
+const Input = forwardRef((props, ref) => <input ref={ref} className={`flex h-10 w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-transparent px-3 py-2 text-sm text-black dark:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${props.className || ''}`} {...props} />);
 const Badge = ({ children, variant = 'default', className = '', ...props }) => {
     const variantClasses = {
         default: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
@@ -368,10 +368,12 @@ function Giveaways({ state, setState, watch, storeNames }) {
         const load = async () => {
             setState(s => ({...s, loading: true, error: null}));
             const allGiveaways = new Map();
+            let apiSucceeded = false; // Flag to track if any API call was successful
 
             const fetchAndProcess = async (plat) => {
                 const data = await fetchJSON(`https://www.gamerpower.com/api/giveaways?platform=${plat}`);
                 if (Array.isArray(data)) {
+                    apiSucceeded = true; // Mark success even if the array is empty
                     data.forEach(item => allGiveaways.set(item.id, item));
                 }
             };
@@ -386,14 +388,15 @@ function Giveaways({ state, setState, watch, storeNames }) {
 
                 let list = Array.from(allGiveaways.values());
 
-                if (list.length === 0) {
-                     console.log("Primary giveaway source empty/failed, attempting fallback...");
+                if (list.length === 0 && !apiSucceeded) {
+                     console.log("Primary giveaway source failed, attempting fallback...");
                      if(!CONSOLE_PLATFORMS.includes(platform)) {
                          let url = "https://www.cheapshark.com/api/1.0/deals?upperPrice=0.00&pageSize=20";
                          const storeId = PLATFORM_TO_STORE_ID[platform];
                          if(storeId) url += `&storeID=${storeId}`;
                          const deals = await fetchJSON(url);
                          if (Array.isArray(deals)) {
+                              apiSucceeded = true;
                               list = deals.map(d => ({
                                  id: `cs-giveaway-${d.dealID}`, title: d.title,
                                  platforms: storeNames[d.storeID] || 'PC',
@@ -403,10 +406,11 @@ function Giveaways({ state, setState, watch, storeNames }) {
                      }
                 }
 
-                if (list.length > 0) {
+                if (apiSucceeded) {
                     setState({ data: list, loading: false, error: null });
-                    localStorage.setItem(cacheKey, JSON.stringify(list));
+                    if (list.length > 0) localStorage.setItem(cacheKey, JSON.stringify(list));
                 } else {
+                    // This block now only runs if ALL live APIs truly fail
                     const cachedDataRaw = localStorage.getItem(cacheKey);
                     if (cachedDataRaw) {
                          setState({ data: JSON.parse(cachedDataRaw), loading: false, error: "Failed to get updates. Showing cached data." });
@@ -618,5 +622,6 @@ function ResultsSection({ title, items, CardComponent, ...props }) {
 }
 
 export default App;
+
 
 
